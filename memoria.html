@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero & Villan Memory</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+</head>
+
+<body>
+    <div id="base"></div>
+
+    <script type="text/babel">
+
+        const Screen = ({ children }) => {
+            const style = {
+                backgroundImage: "url(./wwp.png)",
+                backgroundSize: "cover",
+                width: "100vw",
+                height: "100vh",
+                backgroundRepeat: "no-repeat",
+            }
+
+            return (
+                <div style={style} >
+                    {children}
+                </div>
+            )
+        }
+        const Cartas = ({ img, serie }) => {
+
+            // const [flip, useFlip] = React.useState(False)
+            //console.log(nam)
+            const style = {
+                width: "100px",
+                height: "150px",
+                backgroundImage: img,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+            }
+
+            return (
+                <div style={style} />
+            )
+        }
+        const Tablero = ({ Cartas }) => {
+            const style = {
+
+            }
+        }
+
+        const App = () => {
+            const back = "./back.jpg"
+            const imgs = [
+                { "img": "url(./aot.png)", "serie": "aot" }, { "img": "url(./aotv.png)", "serie": "aot" },
+                { "img": "url(./bha.png)", "serie": "bha" }, { "img": "url(./bhav.png)", "serie": "bha" },
+                { "img": "url(./dn.png)", "serie": "dn" }, { "img": "url(./dnv.png)", "serie": "dn" },
+                { "img": "url(./ds.png)", "serie": "ds" }, { "img": "url(./dsv.png)", "serie": "ds" },
+                { "img": "url(./jjk1.png)", "serie": "jjk" }, { "img": "url(./jjk2.png)", "serie": "jjk" },
+                { "img": "url(./n.png)", "serie": "n" }, { "img": "url(./nv.png)", "serie": "n" },
+                { "img": "url(./se.png)", "serie": "se" }, { "img": "url(./sev.png)", "serie": "se" },
+                { "img": "url(./tr.png)", "serie": "tr" }, { "img": "url(./trv.png)", "serie": "tr" }]
+            imgs.sort(() => Math.random() - 0.5)
+
+            return (
+                <Screen>
+                    {imgs.map((img, i) => <Cartas key={`${img.img}${i}`} {...img} />)}
+                </Screen>
+
+            )
+        }
+
+        ReactDOM.render(
+            <App />,
+            document.getElementById("base")
+        )
+
+    </script>
+</body>
+
+</html>

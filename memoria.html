@@ -59,10 +59,10 @@
             )
         }
 
-        const Cartas = ({ img, serie }) => {
+        const Cartas = ({ img, serie, flip, click }) => {
             let temp = img
             const back = "./back.jpg"
-            const [flip, useFlip] = React.useState(false)
+            // const [flip, useFlip] = React.useState(false)
 
             const style = {
 
@@ -83,41 +83,50 @@
             }
 
             return (
-                <div style={{ ...style.Sleeve, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)', backgroundImage: flip ? serie : null }} onClick={() => useFlip(!flip)}>
+                <div onClick={click} style={{ ...style.Sleeve, transform: flip ? 'rotateY(180deg)' : 'rotateY(0deg)', backgroundImage: flip ? serie : null }}>
                     <img style={style.Imgae} src={`${flip ? img : back}`} />
                 </div>
             )
         }
-        const Tablero = ({ children }) => {
+        const Tablero = ({ abc }) => {
+            //console.log(abc)
             const moves = React.useRef(0)
             const back = "./back.jpg"
-            const [flip, useFlip] = React.useState(children.map(() => false))
+            const [flip, useFlip] = React.useState(abc.map(() => false))
             const [valor, setValor] = React.useState(0)
-
+            const [ultima, setUltima] = React.useState(null)
             const clickHandler = (index) => {
+
                 if (moves.current < 2) {
+                    console.log(moves.current)
                     const nuevos = [...flip]
                     nuevos[index] = true
                     useFlip(nuevos)
                     moves.current = moves.current + 1
                     if (moves.current === 1) {
-                        ultima.current = children[index]
-                        penultima.current = index
+                        setUltima(index)
                     }
                     if (moves.current === 2) {
-                        if (ultima.current === children[index]) {
+                        if (abc[ultima].serie === abc[index].serie) {
+                            moves.current = 0
+                            if (valor === 8) {
+
+                            }
                         }
                         else {
                             setTimeout(() => {
                                 const old = [...flip]
                                 old[index] = false
-                                old[penultima.current] = false
+                                old[ultima] = false
                                 useFlip(old)
+                                moves.current = 0
                             }, 1000)
                             setValor(valor + 1)
                         }
                     }
                 }
+
+
             }
             const style = {
 
@@ -142,11 +151,13 @@
             return (
                 <div style={style.container}>
                     <div style={style.text}>
-                        <div onclick={() => location.reload()}><h1 style={style.button}>Reiniciar</h1></div>
+                        <div onClick={() => location.reload()}><h1 style={style.button}>Reiniciar</h1></div>
                         <div ><h1 style={style.button}>Movimientos: {valor}</h1></div>
                     </div>
-                    <div class="grid-cointainer" >
-                        {children}
+                    <div className="grid-cointainer" >
+                        {
+                            abc.map((img, i) => <Cartas key={i} img={flip[i] ? img.img : back} serie={img.serie} flip={flip[i]} click={() => clickHandler(i)} />)
+                        }
                     </div>
                 </div >
             )
@@ -155,22 +166,20 @@
         const App = () => {
             const back = "./back.jpg"
             const imgs = [
-                { "img": "./aot.png", "serie": "url(./aotc.jpg)" }, { "img": "./aotv.png", "serie": "url(./aotc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./bhav.png", "serie": "url(./bnhc.jpg)" }, { "img": "./bha.png", "serie": "url(./bnhc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./dn.png", "serie": "url(./dnc.jpg)" }, { "img": "./dnv.png", "serie": "url(./dnc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./ds.png", "serie": "url(./dsc.jpg)" }, { "img": "./dsv.png", "serie": "url(./dsc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./jjk1.png", "serie": "url(./jjkc.jpg)" }, { "img": "./jjk2.png", "serie": "url(./jjkc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./n.png", "serie": "url(./nc.jpg)" }, { "img": "./nv.png", "serie": "url(./nc.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./se.png", "serie": "url(./sec.jpg)" }, { "img": "./sev.png", "serie": "url(./sec.jpg)", "color": "drop-shadow(10px 10px 10px red)" },
-                { "img": "./tr.png", "serie": "url(./trc.jpg)" }, { "img": "./trv.png", "serie": "url(./trc.jpg)", "color": "drop-shadow(10px 10px 10px red)" }]
+                { "img": "./aot.png", "serie": "url(./aotc.jpg)" }, { "img": "./aotv.png", "serie": "url(./aotc.jpg)" },
+                { "img": "./bhav.png", "serie": "url(./bnhc.jpg)" }, { "img": "./bha.png", "serie": "url(./bnhc.jpg)" },
+                { "img": "./dn.png", "serie": "url(./dnc.jpg)" }, { "img": "./dnv.png", "serie": "url(./dnc.jpg)" },
+                { "img": "./ds.png", "serie": "url(./dsc.jpg)" }, { "img": "./dsv.png", "serie": "url(./dsc.jpg)" },
+                { "img": "./jjk1.png", "serie": "url(./jjkc.jpg)" }, { "img": "./jjk2.png", "serie": "url(./jjkc.jpg)" },
+                { "img": "./n.png", "serie": "url(./nc.jpg)" }, { "img": "./nv.png", "serie": "url(./nc.jpg)" },
+                { "img": "./se.png", "serie": "url(./sec.jpg)" }, { "img": "./sev.png", "serie": "url(./sec.jpg)" },
+                { "img": "./tr.png", "serie": "url(./trc.jpg)" }, { "img": "./trv.png", "serie": "url(./trc.jpg)" }]
             imgs.sort(() => Math.random() - 0.5)
 
             return (
                 <Screen>
                     <Title />
-                    <Tablero>
-                        {imgs.map((img, i) => <Cartas key={`${img.img}${i}`} {...img} />)}
-                    </Tablero>
+                    <Tablero abc={imgs} />
                 </Screen>
 
             )

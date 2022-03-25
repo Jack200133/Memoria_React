@@ -17,6 +17,13 @@
             justify-content: center;
             align-items: center;
         }
+
+        .fin {
+            grid-column-start: 2;
+            grid-column-end: 4;
+            grid-row-start: row1-start;
+            grid-row-end: 3;
+        }
     </style>
 </head>
 
@@ -91,6 +98,7 @@
         const Tablero = ({ abc }) => {
             //console.log(abc)
             const moves = React.useRef(0)
+            const [mot, setmot] = React.useState(0)
             const back = "./back.jpg"
             const [flip, useFlip] = React.useState(abc.map(() => false))
             const [valor, setValor] = React.useState(0)
@@ -98,20 +106,21 @@
             const clickHandler = (index) => {
 
                 if (moves.current < 2) {
-                    console.log(moves.current)
                     const nuevos = [...flip]
                     nuevos[index] = true
                     useFlip(nuevos)
                     moves.current = moves.current + 1
+                    setmot(mot + 1)
+                    console.log("VALOR: ", valor)
+                    console.log("MOVES: ", moves)
+                    console.log("MOT: ", mot)
                     if (moves.current === 1) {
                         setUltima(index)
                     }
                     if (moves.current === 2) {
                         if (abc[ultima].serie === abc[index].serie) {
                             moves.current = 0
-                            if (valor === 8) {
-
-                            }
+                            setValor(valor + 1)
                         }
                         else {
                             setTimeout(() => {
@@ -121,7 +130,7 @@
                                 useFlip(old)
                                 moves.current = 0
                             }, 1000)
-                            setValor(valor + 1)
+
                         }
                     }
                 }
@@ -132,12 +141,13 @@
 
                 container: {
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
+
+
                 },
                 text: {
                     display: "flex",
                     flexDirection: "row",
-
                     justifyContent: "space-around"
                 },
                 button: {
@@ -147,20 +157,34 @@
                     fontFamily: "Tahoma",
                 }
             }
-
+            if (valor < 8) {
+                return (
+                    <div style={style.container}>
+                        <div style={style.text}>
+                            <div onClick={() => location.reload()}><h1 style={style.button}>Reiniciar</h1></div>
+                            <div ><h1 style={style.button}>Movimientos: {mot}</h1></div>
+                        </div>
+                        <div className="grid-cointainer" >
+                            {
+                                abc.map((img, i) => <Cartas key={i} img={flip[i] ? img.img : back} serie={img.serie} flip={flip[i]} click={() => clickHandler(i)} />)
+                            }
+                        </div>
+                    </div >
+                )
+            }
             return (
                 <div style={style.container}>
                     <div style={style.text}>
                         <div onClick={() => location.reload()}><h1 style={style.button}>Reiniciar</h1></div>
-                        <div ><h1 style={style.button}>Movimientos: {valor}</h1></div>
+                        <div ><h1 style={style.button}>Movimientos: {mot}</h1></div>
                     </div>
-                    <div className="grid-cointainer" >
-                        {
-                            abc.map((img, i) => <Cartas key={i} img={flip[i] ? img.img : back} serie={img.serie} flip={flip[i]} click={() => clickHandler(i)} />)
-                        }
-                    </div>
+
+                    <div class="fin"><h1 style={style.button}> FINAL DEL JUEGO</h1></div>
+
+
                 </div >
             )
+
         }
 
         const App = () => {
